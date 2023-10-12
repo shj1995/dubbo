@@ -14,25 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.rpc.executor;
+package org.apache.dubbo.rpc.support;
 
-import org.apache.dubbo.common.URL;
-import org.apache.dubbo.common.threadpool.manager.ExecutorRepository;
+import org.apache.dubbo.common.stream.StreamObserver;
 
-import java.util.concurrent.Executor;
-
-public class DefaultExecutorSupport implements ExecutorSupport {
-    private final ExecutorRepository executorRepository;
-    private final URL url;
-
-    public DefaultExecutorSupport(URL url) {
-        this.url = url;
-        this.executorRepository = ExecutorRepository.getInstance(url.getOrDefaultApplicationModel());
+public class DemoService1Impl implements DemoService1{
+    @Override
+    public StreamObserver<String> sayHello(StreamObserver<String> request) {
+        request.onNext("BI_STREAM");
+        return request;
     }
 
     @Override
-    public Executor getExecutor(Object data) {
-        return executorRepository.getExecutor(url);
+    public void sayHello(String msg, StreamObserver<String> request) {
+        request.onNext(msg);
+        request.onNext("SERVER_STREAM");
+        request.onCompleted();
     }
-
 }
